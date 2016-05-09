@@ -40,6 +40,17 @@ var last_names = [
 	"King Jr."
 ];
 
+function randomDate () {
+	var d = new Date();
+	d.setSeconds( Math.round(Math.random()*60)+1 );
+	d.setMinutes( Math.round(Math.random()*60)+1 );
+	d.setHours( Math.round(Math.random()*24)+1 );
+	d.setDate( Math.round(Math.random()*31)+1 );
+	d.setMonth( Math.round(Math.random()*12) );
+	d.setYear( Math.round(Math.random()*3000) );
+	return d;
+}
+
 function randomElementFrom (array) {
 	if (array.length)
 		return array[Math.floor(Math.random()*array.length)];

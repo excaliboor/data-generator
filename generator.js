@@ -61,3 +61,32 @@ function randomElementFrom (array) {
 function generate_name () {
 	return randomElementFrom(first_names)+" "+randomElementFrom(last_names);
 }
+
+function mod10 (value) {
+	value = parseInt(value).toString().split('');
+	if (value.length === 0)
+		return -1;
+
+	var checksum = 0;
+	value.reverse();
+	var temp;
+	for (var i = 0; i < value.length; ++i)
+	{
+		temp = parseInt(value[i]);
+		if (i%2 === 0)
+		{
+			temp *= 2;
+			if (10 <= temp)
+				temp -= 9;
+		}
+		checksum += parseInt(temp);
+	}
+	return (checksum*9)%10;
+}
+
+function generateCreditCardNumber () {
+	var random_number = ""+Math.floor( Math.random()*1000000000000000 );
+	while (random_number.length < 15)
+		random_number+=Math.floor(Math.random()*10);
+	return random_number+mod10(random_number);
+}

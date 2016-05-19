@@ -1,9 +1,9 @@
 #include <iostream>
 
 
-template <typename returnType, typename... args>
+template <typename fType, typename... args>
 void test (
-           std::function<returnType> function,
+           std::function<fType> function,
            int times,
            args const... parameters
            );
@@ -11,6 +11,7 @@ void test (
 
 int randomBetween (int min, int max);
 char mod10 (const std::string number);
+
 
 int main (int argc, const char * argv[])
 {
@@ -23,6 +24,7 @@ int main (int argc, const char * argv[])
     
     return 0;
 }
+
 
 int randomBetween (int min, int max)
 {

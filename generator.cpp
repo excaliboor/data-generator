@@ -1,26 +1,26 @@
 #include <iostream>
 
-typedef void* (*FUNC_PTR)(...);
-
 
 template <typename returnType, typename... args>
 void test (
-           FUNC_PTR function,
+           std::function<returnType> function,
            int times,
            args const... parameters
            );
 
 
 int randomBetween (int min, int max);
-char mod10 (char* number);
+char mod10 (const std::string number);
 
 int main (int argc, const char * argv[])
 {
     // generate some lotto numbers
-    test<intptr_t> ( (FUNC_PTR) randomBetween, 6, 1, 49 );
-    // generate check digit for my neighbour's CreditCard number
-    test<intptr_t> ( (FUNC_PTR) mod10, 1, "128471924169832" );
+    test <int (int, int)> ( randomBetween, 6, 1, 49 );
 
+    // generate check digit for my neighbour's CreditCard number
+    std::string ccn = "543778054231787";
+    test <char (std::string)> ( mod10, 1, ccn );
+    
     return 0;
 }
 
@@ -30,16 +30,17 @@ int randomBetween (int min, int max)
     if (!set)
     {
         srand( (unsigned int) time( NULL ) );
+        rand(); rand(); // the first two values after srand(time) aren't that random...
         set = true;
     }
-    
+
     return (rand()%(max-min+1)) + min;
 }
 
-char mod10 (char* n)
+char mod10 (const std::string n)
 {
-    if (strlen(n) == 0)
-        return -1;
+    if (n.length() == 0)
+        return 'X';
 
     int checksum = 0;
     short temp;
@@ -47,10 +48,7 @@ char mod10 (char* n)
     auto number = std::string(n);
     for (auto it = number.rbegin(); it != number.rend(); ++it, ++i)
     {
-        temp = *it;
-        if (temp)
-            temp -= '0';
-
+        temp = *it - '0';
         if (i%2 == 0)
         {
             temp <<= 1;
@@ -61,12 +59,12 @@ char mod10 (char* n)
         checksum += temp;
     }
 
-    return (checksum*9)%10;
+    return (checksum*9)%10+'0';
 }
 
-template <typename returnType, typename ... args>
+template <typename fType, typename ... args>
 void test (
-           FUNC_PTR function,
+           std::function<fType> function,
            int times,
            args const... parameters
            )
@@ -77,7 +75,7 @@ void test (
     for (auto i = 0; i < times; ++i)
     {
         std::cout <<"Test run "<< (i+1) <<": "
-            << (returnType) function( parameters... )
+            << function( parameters... )
             << std::endl;
     }
 }
